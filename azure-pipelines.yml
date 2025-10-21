@@ -16,7 +16,7 @@ steps:
 # Step 2: Copy to Azure VM using SSH
 - task: CopyFilesOverSSH@0
   inputs:
-    sshEndpoint: 'my-azurevm-ssh'   # We'll create this in Step 5
+    sshEndpoint: 'azuressh'   # We'll create this in Step 5
     sourceFolder: '$(Build.SourcesDirectory)'
     contents: '**/*.html'
     targetFolder: '/var/www/helloworld'
@@ -24,7 +24,7 @@ steps:
 # Step 3: Restart Nginx (optional)
 - task: SSH@0
   inputs:
-    sshEndpoint: 'my-azurevm-ssh'
+    sshEndpoint: 'azuressh'
     runOptions: 'commands'
     commands: |
       sudo systemctl restart nginx
