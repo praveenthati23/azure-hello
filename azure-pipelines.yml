@@ -1,0 +1,31 @@
+trigger:
+- dev
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- checkout: self
+
+# Step 1: Print Hello World (build simulation)
+- script: |
+    echo "=== Building Hello World Project ==="
+    cat index.html
+  displayName: 'Build Hello World'
+
+# Step 2: Copy to Azure VM using SSH
+- task: CopyFilesOverSSH@0
+  inputs:
+    sshEndpoint: 'my-azurevm-ssh'   # We'll create this in Step 5
+    sourceFolder: '$(Build.SourcesDirectory)'
+    contents: '**/*.html'
+    targetFolder: '/var/www/helloworld'
+
+# Step 3: Restart Nginx (optional)
+- task: SSH@0
+  inputs:
+    sshEndpoint: 'my-azurevm-ssh'
+    runOptions: 'commands'
+    commands: |
+      sudo systemctl restart nginx
+  displayName: 'Restart Nginx on VM'
