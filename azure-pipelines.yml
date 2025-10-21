@@ -1,31 +1,18 @@
 trigger:
-- dev
+  branches:
+    include:
+    - dev
 
 pool:
-  vmImage: 'ubuntu-latest'
+  name: Default
+  demands:
+  - agent.name -equals MyWindowsAgent
 
 steps:
-- checkout: self
+- script: echo "Hello from Azure Pipeline running on MyWindowsAgent!"
+  displayName: 'Test Agent Connectivity'
 
-# Step 1: Print Hello World (build simulation)
 - script: |
-    echo "=== Building Hello World Project ==="
-    cat index.html
-  displayName: 'Build Hello World'
-
-# Step 2: Copy to Azure VM using SSH
-- task: CopyFilesOverSSH@0
-  inputs:
-    sshEndpoint: 'azure-ssh'   # We'll create this in Step 5
-    sourceFolder: '$(Build.SourcesDirectory)'
-    contents: '**/*.html'
-    targetFolder: '/var/www/helloworld'
-
-# Step 3: Restart Nginx (optional)
-- task: SSH@0
-  inputs:
-    sshEndpoint: 'azure-ssh'
-    runOptions: 'commands'
-    commands: |
-      sudo systemctl restart nginx
-  displayName: 'Restart Nginx on VM'
+    echo "Building project..."
+    echo "Simulating deployment to VM"
+  displayName: 'Build and Deploy'
