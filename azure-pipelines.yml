@@ -4,7 +4,7 @@ trigger:
     - dev
 
 pool:
-  name: Default
+  name: MyAgentPool
   demands:
   - agent.name -equals MyWindowsAgent
 
