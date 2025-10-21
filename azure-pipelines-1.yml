@@ -1,19 +1,35 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
-- dev
+  branches:
+    include:
+      - dev  # Run the pipeline when code changes in 'dev'
 
 pool:
   vmImage: ubuntu-latest
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+  # 1️⃣ Checkout your GitHub code
+  - checkout: self
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+  # 2️⃣ (Optional) Build step — skip if it's just static HTML
+  - script: |
+      echo "No build required for static website"
+    displayName: "Build Step"
+
+  # 3️⃣ Deploy code to your Azure VM
+  - task: CopyFilesOverSSH@0
+    displayName: "Copy website files to Azure VM"
+    inputs:
+      sshEndpoint: "azure-ssh"                  # Service connection name
+      sourceFolder: "$(Build.SourcesDirectory)"
+      contents: "**"                       # Copy all files
+      targetFolder: "/var/www/helloworld"  # Destination on VM
+
+  # 4️⃣ Optional: restart web service (if using nginx/apache)
+  - task: SSH@0
+    displayName: "Restart web service"
+    inputs:
+      sshEndpoint: "azure-ssh"
+      runOptions: "commands"
+      commands: |
+        sudo systemctl restart nginx || sudo systemctl restart apache2
+        echo "Deployment complete!"
