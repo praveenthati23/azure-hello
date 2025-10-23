@@ -17,7 +17,7 @@ steps:
 - task: CopyFilesOverSSH@0
   displayName: "Deploy code to Azure VM"
   inputs:
-    sshEndpoint: 'azure-ssh'   # 👈 must match the service connection name
+    sshEndpoint: 'my-ssh'   # 👈 must match the service connection name
     sourceFolder: '$(Build.SourcesDirectory)'  # code from repo
     contents: '**'                  # copy everything
     targetFolder: '/var/www/helloworld'  # destination on VM
