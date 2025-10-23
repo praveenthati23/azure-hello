@@ -6,7 +6,10 @@ trigger:
       - dev   # 👈 pipeline runs automatically on push to dev branch
 
 pool:
-  vmImage: 'ubuntu-latest'   # 👈 use Microsoft-hosted agent
+  name: 'MyAgentPool'       # 👈 pool containing 'linuxagent'
+  demands:
+    - agent.name -equals linuxagent   # 👈 ensure it runs on your specific agent
+    - agent.os -equals Linux          # 👈 ensure the agent is Linux
 
 steps:
 # Step 1: Display build start
