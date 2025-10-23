@@ -1,18 +1,23 @@
+# azure-pipelines.yml
+
 trigger:
   branches:
     include:
-    - dev
+      - dev   # 👈 pipeline runs automatically on push to dev branch
 
 pool:
-  name: Default
-  demands:
-  - agent.name -equals Hosted Agent
+  vmImage: 'ubuntu-latest'   # 👈 use Microsoft-hosted agent
 
 steps:
-- script: echo "Hello from Azure Pipeline running on MyWindowsAgent!"
-  displayName: 'Test Agent Connectivity'
+# Step 1: Display build start
+- script: echo "🚀 Starting build and deployment..."
+  displayName: "Start Build"
 
-- script: |
-    echo "Building project..."
-    echo "Simulating deployment to VM"
-  displayName: 'Build and Deploy'
+# Step 2: Copy code to Azure VM via SSH
+- task: CopyFilesOverSSH@0
+  displayName: "Deploy code to Azure VM"
+  inputs:
+    sshEndpoint: 'azure-ssh'   # 👈 must match the service connection name
+    sourceFolder: '$(Build.SourcesDirectory)'  # code from repo
+    contents: '**'                  # copy everything
+    targetFolder: '/var/www/helloworld'  # destination on VM
