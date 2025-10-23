@@ -19,7 +19,7 @@ steps:
   - task: CopyFilesOverSSH@0
     displayName: "Copy website files to Azure VM"
     inputs:
-      sshEndpoint: "azure-ssh"                  # Service connection name
+      sshEndpoint: "Hosted Agent"                  # Service connection name
       sourceFolder: "$(Build.SourcesDirectory)"
       contents: "**"                       # Copy all files
       targetFolder: "/var/www/helloworld"  # Destination on VM
@@ -28,7 +28,7 @@ steps:
   - task: SSH@0
     displayName: "Restart web service"
     inputs:
-      sshEndpoint: "azure-ssh"
+      sshEndpoint: "Hosted Agent"
       runOptions: "commands"
       commands: |
         sudo systemctl restart nginx || sudo systemctl restart apache2
