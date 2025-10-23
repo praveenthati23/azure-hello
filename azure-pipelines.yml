@@ -4,9 +4,9 @@ trigger:
     - dev
 
 pool:
-  name: MyAgentPool
+  name: Azure Pipelines
   demands:
-  - agent.name -equals MyWindowsAgent
+  - agent.name -equals Hosted Agent
 
 steps:
 - script: echo "Hello from Azure Pipeline running on MyWindowsAgent!"
